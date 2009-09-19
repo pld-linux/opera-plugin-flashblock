@@ -63,10 +63,10 @@ install -d $USER_STYLES $USER_JS
 prg_error_handle $? "Error while creating $USER_STYLES and $USER_JS directories"
 
 test -f $GLOB_CSS && ln -sf $GLOB_CSS $USER_STYLES
-# prg_error_handle $? "Error while creating link $GLOB_CSS to $USER_STYLES"
+prg_error_handle $? "Error while creating link $GLOB_CSS to $USER_STYLES"
 
 test -f $GLOB_JS && ln -sf $GLOB_JS $USER_JS
-# prg_error_handle $? "Error while creating links $GLOB_JS to $USER_JS"
+prg_error_handle $? "Error while creating links $GLOB_JS to $USER_JS"
 
 if [ $WHITELIST -eq 1 ]; then
     test -f $GLOB_JS_WHITELIST && cp $GLOB_JS_WHITELIST $USER_JS
