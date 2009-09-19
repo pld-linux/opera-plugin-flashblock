@@ -42,7 +42,7 @@ install -d $RPM_BUILD_ROOT%{_bindir}
 
 install FlashBlocker.css $RPM_BUILD_ROOT%{operastyles}
 install FlashBlocker.js FlashBlocker-white-list.js $RPM_BUILD_ROOT%{operascripts}
-install %SOURCE1 $RPM_BUILD_ROOT%{_bindir}
+install %{SOURCE1} $RPM_BUILD_ROOT%{_bindir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
