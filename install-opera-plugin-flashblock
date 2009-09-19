@@ -1,0 +1,78 @@
+#!/bin/bash
+
+USER_OPERA=$HOME/.opera
+USER_STYLES=$USER_OPERA/styles/user
+USER_JS=$USER_OPERA/userjs
+GLOB_CSS=/usr/share/opera/styles/user/FlashBlocker.css
+GLOB_JS=/usr/share/opera/scripts/FlashBlocker.js
+GLOB_JS_WHITELIST=/usr/share/opera/scripts/FlashBlocker-white-list.js
+WHITELIST=0
+
+function prg_print_dirs () {
+    echo -e "USER_OPERA_STYLES_DIR \t ${USER_STYLES}"
+    echo -e "USER_OPERA_JS_DIR \t ${USER_JS}"
+}
+
+function prg_help () {
+    echo This program installs per user the flashblocker plugin to opera.
+    echo Usage: $(basename $0) [-h] [-u USER_OPERA_STYLES_DIR] [-j USER_OPERA_JS_DIR] [-w]
+    echo 
+    echo "If you use option '-w' the 'FlashBlocker-white-list.js' will be used too."
+    echo Default values are:
+    echo
+    prg_print_dirs
+    echo
+    prg_print_post_install
+}
+
+function prg_error_handle () {
+    if [ $1 -ne 0 ]; then
+	echo $2 >&2
+	exit 1
+    fi
+}
+
+function prg_print_post_install () {
+    echo "You'll need to do in Opera the following to complete (as user '$USER'):"
+    echo 1. "Tools -> Preferences -> Advanced -> Content -> Javascript Options -> add location '$USER_JS'"
+    echo 2. "Restart Opera"
+    echo 3. "Select Flash blocker in menu View -> Style"
+}
+
+
+while getopts "ho:u:j:w" OPT; do
+    case ${OPT} in
+	h) prg_help
+	exit 0
+	;;
+	o) USER_OPERA=${OPTARG}
+	;;
+	u) USER_STYLES=${OPTARG}
+	;;
+	j) USER_JS=${OPTARG}
+	;;
+	w) WHITELIST=1
+	;;
+	*) echo
+	prg_help
+	exit 1
+    esac
+done 
+
+install -d $USER_STYLES $USER_JS
+prg_error_handle $? "Error while creating $USER_STYLES and $USER_JS directories"
+
+test -f $GLOB_CSS && ln -sf $GLOB_CSS $USER_STYLES
+# prg_error_handle $? "Error while creating link $GLOB_CSS to $USER_STYLES"
+
+test -f $GLOB_JS && ln -sf $GLOB_JS $USER_JS
+# prg_error_handle $? "Error while creating links $GLOB_JS to $USER_JS"
+
+if [ $WHITELIST -eq 1 ]; then
+    test -f $GLOB_JS_WHITELIST && cp $GLOB_JS_WHITELIST $USER_JS
+    prg_error_handle $? "Error while copying $GLOB_JS_WHITELIST to $USER_JS"
+fi
+
+echo -n "Install is almost complete. " 
+prg_print_post_install
+
