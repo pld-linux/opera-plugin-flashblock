@@ -11,6 +11,7 @@ Source0:	http://ruzanow.ru/opera/flashblocker.zip
 # Source0-md5:	dddb58f7468860adc4c4ac72425a0ecc
 Source1:	install-%{name}
 URL:		http://my.opera.com/Lex1/blog/flashblock-for-opera-9
+BuildRequires:	unzip
 Requires:	opera >= 10.0
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
